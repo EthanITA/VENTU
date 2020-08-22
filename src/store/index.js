@@ -38,15 +38,27 @@ const store = new Vuex.Store({
   actions: {
     async login({ dispatch }, form) {
       // sign user in
-      const { user } = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
+      var user
+      try {
+        user = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
+
+      } catch (error) {
+        alert(error.message)
+      }
 
       // fetch user profile and set in state
       dispatch('fetchUserProfile', user)
     },
     async signup({ dispatch }, form) {
       // sign user up
-      const { user } = await fb.auth.createUserWithEmailAndPassword(form.email, form.password)
+      var user
+      try {
 
+        user = await fb.auth.createUserWithEmailAndPassword(form.email, form.password)
+
+      } catch (error) {
+        alert(error.message)
+      }
       // create user object in userCollections
       await fb.usersCollection.doc(user.uid).set({
         name: form.name,
@@ -76,7 +88,9 @@ const store = new Vuex.Store({
       commit('setUserProfile', {})
 
       // redirect to login view
-      router.push('/login')
+      if (router.currentRoute.path !== '/login') {
+        router.push('/login')
+      }
     },
     async createPost({ state, commit }, post) {
       // create post in firebase
@@ -89,7 +103,7 @@ const store = new Vuex.Store({
         likes: 0
       })
     },
-    async likePost ({ commit }, post) {
+    async likePost({ commit }, post) {
       const userId = fb.auth.currentUser.uid
       const docId = `${userId}_${post.id}`
 

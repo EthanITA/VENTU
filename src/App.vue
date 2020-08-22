@@ -1,23 +1,23 @@
 <template>
-  <div id="app">
-    <SiteNav v-if="showNav"></SiteNav>
-    <router-view/>
-  </div>
+	<div id="app">
+		<div class="hero is-fullheight is-primary is-bold is-unselectable">
+			<SiteNav class="hero-header"></SiteNav>
+			<router-view class="hero-body container is-full-screen" />
+		</div>
+	</div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import SiteNav from '@/components/SiteNav'
 
 export default {
-  components: {
-    SiteNav
-  },
-  computed: {
-    ...mapState(['userProfile']),
-    showNav() {
-      return Object.keys(this.userProfile).length > 1
-    }
-  }
+	components: {
+		SiteNav
+	}
 }
 </script>
+<style scoped>
+.columns:last-child {
+	margin-bottom: -0.75rem;
+}
+</style>
