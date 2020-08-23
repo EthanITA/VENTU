@@ -5,6 +5,9 @@ import store from './store'
 import { auth } from './firebase'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
+import wb from "./registerServiceWorker"
+
+Vue.prototype.$workbox = wb
 
 Vue.use(Buefy)
 

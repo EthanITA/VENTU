@@ -1,6 +1,7 @@
 Project based on Vuegram.
 
-# dependencies
-- Vue-cli
-- Firebase 
-- Buefy
+# NPM dependencies
+- vue
+- firebase 
+- buefy
+- vue-router

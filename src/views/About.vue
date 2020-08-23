@@ -63,39 +63,49 @@ a.box:focus {
 import dongImg from "../images/dong.jpg"
 import ventuImg from "../images/ventu.jpg"
 import ottoImg from "../images/otto.jpg"
+import castaImg from "../images/casta.jpg"
 export default {
 
 	data() {
 		return {
 			infos: {
-				"": {},
+				ventu: {
+					name: "Luca Venturini", update: "Aug 2020", img: ventuImg,
+					content: `
+						Il boss della palestra!
+						`,
+					contacts: `
+						Email: <a target="_blank" href="mailto:lucaventur167.lv@gmail.com">lucaventur167.lv@gmail.com</a> <br>
+						Cell: 349 326 8691
+						`},
+				otto: {
+					name: "Riccardo Ottonello", update: "Aug 2020", img: ottoImg,
+					content: `
+						Il boss della palestra!
+					`,
+					contacts: `
+						Cell: -
+						`},
+				casta: {
+					name: "Stefano Castagna", update: "Aug 2020", img: castaImg,
+					content: `
+						Il boss della palestra!
+						`,
+					contacts: `
+						Cell: 346 732 8290
+						`
+				},
 				dong: {
 					name: "Marco Dong", update: "Aug 2020", img: dongImg,
-					content: `Sviluppatore del sito!`,
+					content: `
+						Sviluppatore del sito!
+						`,
 					contacts: `
 						Email: <a target="_blank" href="mailto:viaimperiale@gmail.com">viaimperiale@gmail.com</a> <br>
 						Telegram: <a target="_blank" href="https://t.me/Marcod98">@Marcod98</a> <br>
-						Cell: 366 400 5624`},
-				ventu: {
-					name: "Luca Venturini", update: "Aug 2020", img: ventuImg,
-					content: `Il boss della palestra! <br />`,
-					contacts: `
-						Email: <a target="_blank" href="mailto:lucaventur167.lv@gmail.com">lucaventur167.lv@gmail.com</a> <br>
-						Cell: 349 326 8691`},
-				otto: {
-					name: "Riccardo Ottonello", update: "Aug 2020", img: ottoImg,
-					content: `Il boss della palestra!`,
-					contacts: `
-						Cell: -`},
-				jason: {
-					name: "Jason", update: "Aug 2020", img: ventuImg,
-					content: `
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						Phasellus nec iaculis mauris.
-						<a>@bulmaio</a>.
-						<a>#css</a>
-						<a>#responsive</a>
-						<br />`}
+						Cell: 366 400 5624
+						`},
+				"": {},
 			},
 			isCardShown: false,
 			profile: ""
