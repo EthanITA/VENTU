@@ -112,7 +112,7 @@ export default {
 			},
 			signupForm: {
 				name: '',
-				title: '',
+				admin: false,
 				email: '',
 				password: ''
 			},
@@ -128,18 +128,10 @@ export default {
 			this.showPasswordReset = !this.showPasswordReset
 		},
 		login() {
-			this.$store.dispatch('login', {
-				email: this.loginForm.email,
-				password: this.loginForm.password
-			})
+			this.$store.dispatch('login', this.loginForm)
 		},
 		signup() {
-			this.$store.dispatch('signup', {
-				email: this.signupForm.email,
-				password: this.signupForm.password,
-				name: this.signupForm.name,
-				title: this.signupForm.title
-			})
+			this.$store.dispatch('signup', this.signupForm)
 		}
 	}
 }

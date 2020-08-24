@@ -6,7 +6,7 @@ import router from '../router/index'
 Vue.use(Vuex)
 
 // realtime firebase
-fb.postsCollection.orderBy('createdOn', 'desc').onSnapshot(snapshot => {
+fb.eventsCollection.orderBy('createdOn', 'desc').onSnapshot(snapshot => {
   let postsArray = []
 
   snapshot.forEach(doc => {
@@ -18,6 +18,15 @@ fb.postsCollection.orderBy('createdOn', 'desc').onSnapshot(snapshot => {
 
   store.commit('setPosts', postsArray)
 })
+
+
+
+
+
+
+
+
+
 
 const store = new Vuex.Store({
   state: {
@@ -35,43 +44,40 @@ const store = new Vuex.Store({
       state.posts = val
     }
   },
+  getters: {
+    getUserProfile(state) {
+      return state.userProfile
+    }
+  },
   actions: {
     async login({ dispatch }, form) {
-      // sign user in
-      var user
-      try {
-        user = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
+      // Try to login 
+      await fb.auth.signInWithEmailAndPassword(form.email, form.password).catch(error => { alert(error.message) })
+      if (fb.auth.currentUser) {
 
-      } catch (error) {
-        alert(error.message)
+        // fetch user profile and set in state if logged in
+        dispatch('fetchUserProfile')
       }
-
-      // fetch user profile and set in state
-      dispatch('fetchUserProfile', user)
     },
     async signup({ dispatch }, form) {
-      // sign user up
-      var user
-      try {
 
-        user = await fb.auth.createUserWithEmailAndPassword(form.email, form.password)
+      // Try to signup with email and password on Firebase
+      await fb.auth.createUserWithEmailAndPassword(form.email, form.password).catch(error => { alert(error.message) })
 
-      } catch (error) {
-        alert(error.message)
+      // Check if i'm logged in
+      if (fb.auth.currentUser) {
+        // create a document 
+        await fb.usersCollection.doc(fb.auth.currentUser.email).set({
+          name: form.name,
+          admin: form.admin
+        })
+        // fetch user profile and set in state
+        dispatch('fetchUserProfile')
       }
-      // create user object in userCollections
-      await fb.usersCollection.doc(user.uid).set({
-        name: form.name,
-        title: form.title
-      })
-
-      // fetch user profile and set in state
-      dispatch('fetchUserProfile', user)
     },
-    async fetchUserProfile({ commit }, user) {
+    async fetchUserProfile({ commit }) {
       // fetch user profile
-      const userProfile = await fb.usersCollection.doc(user.uid).get()
-
+      const userProfile = await fb.usersCollection.doc(fb.auth.currentUser.email).get().catch(err => { alert(err.message) })
       // set user profile in state
       commit('setUserProfile', userProfile.data())
 
@@ -92,19 +98,19 @@ const store = new Vuex.Store({
         router.push('/login')
       }
     },
-    async createPost({ state, commit }, post) {
-      // create post in firebase
-      await fb.postsCollection.add({
-        createdOn: new Date(),
-        content: post.content,
-        userId: fb.auth.currentUser.uid,
-        userName: state.userProfile.name,
-        comments: 0,
-        likes: 0
-      })
-    },
+
+
+
+
+
+
+
+
+
+
+
     async likePost({ commit }, post) {
-      const userId = fb.auth.currentUser.uid
+      const userId = commit("getUserProfile")
       const docId = `${userId}_${post.id}`
 
       // check if user has liked post
@@ -118,35 +124,10 @@ const store = new Vuex.Store({
       })
 
       // update post likes count
-      fb.postsCollection.doc(post.id).update({
+      fb.eventsCollection.doc(post.id).update({
         likes: post.likesCount + 1
       })
-    },
-    async updateProfile({ dispatch }, user) {
-      const userId = fb.auth.currentUser.uid
-      // update user object
-      const userRef = await fb.usersCollection.doc(userId).update({
-        name: user.name,
-        title: user.title
-      })
 
-      dispatch('fetchUserProfile', { uid: userId })
-
-      // update all posts by user
-      const postDocs = await fb.postsCollection.where('userId', '==', userId).get()
-      postDocs.forEach(doc => {
-        fb.postsCollection.doc(doc.id).update({
-          userName: user.name
-        })
-      })
-
-      // update all comments by user
-      const commentDocs = await fb.commentsCollection.where('userId', '==', userId).get()
-      commentDocs.forEach(doc => {
-        fb.commentsCollection.doc(doc.id).update({
-          userName: user.name
-        })
-      })
     }
   }
 })
