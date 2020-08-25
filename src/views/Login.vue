@@ -5,9 +5,10 @@
 		</b-modal>
 		<div :class="{ 'signup-form': !showLoginForm }">
 			<div>
-				<div class="box">
+				<div class="box" style="width:25vw">
 					<form v-if="showLoginForm" @submit.prevent class="column">
-						<label class="label">Login</label>
+						<label class="label has-text-centered">LOGIN</label>
+						<br />
 						<label class="label">
 							<div class="control">
 								<h1 class="text" for="email1">Email</h1>
@@ -45,7 +46,8 @@
 						</div>
 					</form>
 					<form v-else @submit.prevent class="column">
-						<label class="label">Sign up</label>
+						<label class="has-text-centered label">SIGN UP</label>
+						<br />
 						<div class="label">
 							<div class="control">
 								<h1 for="name">Name</h1>

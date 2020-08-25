@@ -1,6 +1,8 @@
 <template>
-	<div class="box">
-		<div class="label">{{name}}</div>
+	<div class="has-text-centered columns is-centered">
+		<div class="box">
+			<div class="label">{{name}}</div>
+		</div>
 	</div>
 </template>
 
@@ -13,3 +15,9 @@ export default {
 	}
 }
 </script>
+
+<style scoped>
+.columns {
+	margin: 0;
+}
+</style>
