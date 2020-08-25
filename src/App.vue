@@ -30,7 +30,7 @@ export default {
 }
 </script>
 <style scoped>
-.columns:last-child {
+.columns {
 	margin-bottom: -0.75rem;
 }
 </style>

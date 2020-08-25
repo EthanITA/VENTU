@@ -1,6 +1,6 @@
 <template>
 	<div id="login">
-		<b-modal v-model="showPasswordReset" :width="640" scroll="keep">
+		<b-modal v-model="showPasswordReset" scroll="keep">
 			<PasswordReset @close="togglePasswordReset()"></PasswordReset>
 		</b-modal>
 		<div :class="{ 'signup-form': !showLoginForm }">

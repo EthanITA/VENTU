@@ -1,25 +1,5 @@
 <template>
 	<div>
-		<div class="columns multiline container is-link list_profile">
-			<div
-				:class="{ 'column is-one-quarter': profile }"
-				v-for="profile in Object.keys(infos)"
-				:key="profile"
-			>
-				<a
-					@click="card(profile)"
-					v-if="profile"
-					class="columns is-multiline box"
-					style="background:rgba(255,255,255,0.25);"
-				>
-					<div class="column image is-full">
-						<img class="is-rounded" :src="infos[profile].img" :alt="infos[profile].img" />
-					</div>
-
-					<label class="column has-text-centered label">{{infos[profile].name}}</label>
-				</a>
-			</div>
-		</div>
 		<b-modal v-model="isCardShown" :width="640" scroll="keep">
 			<div class="card">
 				<div class="card-image">
@@ -42,6 +22,21 @@
 				</div>
 			</div>
 		</b-modal>
+		<div class="columns multiline container is-link list_profile">
+			<div
+				:class="{ 'column is-one-quarter': profile }"
+				v-for="profile in Object.keys(infos)"
+				:key="profile"
+			>
+				<div @click="card(profile)" v-if="profile" class="columns is-multiline box">
+					<div class="column image is-full">
+						<img class="is-rounded" :src="infos[profile].img" :alt="infos[profile].img" />
+					</div>
+
+					<label class="column has-text-centered label">{{infos[profile].name}}</label>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -49,13 +44,16 @@
 .list_profile > *:last-child {
 	margin-bottom: 12px;
 }
-a.columns {
+div.columns {
 	margin-left: 1px;
 	margin-right: 1px;
 }
-a.box:hover,
-a.box:focus {
-	zoom: 1.1;
+div.box:hover,
+div.box:focus {
+	background-color: rgba(255, 255, 255, 0.4);
+}
+div.box {
+	background: rgba(255, 255, 255, 0.2);
 }
 </style>
 
