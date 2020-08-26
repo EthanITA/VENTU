@@ -1,6 +1,6 @@
 <template>
 	<div class="columns is-centered has-text-centered">
-		<div class="box" style="width:25vw;">
+		<div class="box" style="min-width:25vw;">
 			<div v-if="!showSuccess">
 				<label class="label">Enter your email to reset your password</label>
 				<form @submit.prevent>

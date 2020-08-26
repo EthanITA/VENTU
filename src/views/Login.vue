@@ -5,7 +5,7 @@
 		</b-modal>
 		<div :class="{ 'signup-form': !showLoginForm }">
 			<div>
-				<div class="box" style="width:25vw">
+				<div class="box" style="min-width:25vw">
 					<form v-if="showLoginForm" @submit.prevent class="column">
 						<label class="label has-text-centered">LOGIN</label>
 						<br />

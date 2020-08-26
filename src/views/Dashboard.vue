@@ -1,69 +1,59 @@
 <template>
 	<div class="columns is-multiline">
-		<b-modal v-model="show_create_event">
-			<CreateEvent @close="toggleCreateEvent()"></CreateEvent>
+		<b-modal v-model="show_create_event" style="height:100vh">
+			<CreateEvent
+				class="is-vcentered"
+				style="min-height:25vh;overflow:hidden;"
+				:date="date"
+				:modal="show_create_event"
+				@reserved="reserved(date)"
+				@close="toggleCreateEvent()"
+			></CreateEvent>
 		</b-modal>
 		<div class="column" @click="calendarClick()">
 			<b-datepicker inline v-model="date" :events="events" :min-date="min_date"></b-datepicker>
 		</div>
 		<div class="column has-text-centered">
-			<div v-if="hasEvent()" class="box events">
-				<div>AMMINISTRATORI</div>
-				<div>AMMINISTRATORI</div>
-				<div>AMMINISTRATORI</div>
+			<div v-if="hasEvent()" class="box has-text-left events">
+				<div class="label">Amministratori</div>
+				<div
+					class="has-text-centered"
+					v-if="today_events.admin.length === 0"
+				>Non c'è nessun amministratore</div>
+				<div v-else v-for="partecipant in today_events.admin" :key="partecipant.name" class="columns">
+					<div class="column">{{partecipant.name}}</div>
+					<div
+						class="column"
+					>{{parseTime(partecipant.time.hour) + ":" + parseTime(partecipant.time.minute)}}</div>
+				</div>
 				<hr />
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
-				<div>PARTECIPANTI</div>
+				<div class="label">Partecipanti</div>
+				<div
+					class="has-text-centered"
+					v-if="today_events.not_admin.length === 0"
+				>Non c'è nessun partecipante</div>
+				<div
+					v-else
+					class="columns"
+					v-for="partecipant in today_events.not_admin"
+					:key="partecipant.name"
+				>
+					<div class="column">{{partecipant.name}}</div>
+					<div
+						class="column"
+					>{{parseTime(partecipant.time.hour) + ":" + parseTime(partecipant.time.minute)}}</div>
+				</div>
 			</div>
 
-			<div v-else class="box is-selectable" @click="toggleCreateEvent()">
+			<div v-else class="box" style="background-color:rgba(255,255,255,0.5)">
 				<div class="is-text">Non c'è nessuno in questo giorno</div>
-				<br />
-				<div class="icon">
-					<div class="fa fa-plus"></div>
+			</div>
+			<div class="columns">
+				<div class="column">
+					<button class="button is-danger" @click="deleteEvent()">Toglimi</button>
+				</div>
+				<div class="column">
+					<button class="button is-success" @click="toggleCreateEvent()">Ci sono</button>
 				</div>
 			</div>
 		</div>
@@ -72,7 +62,9 @@
 
 <script>
 import CreateEvent from "@/components/CreateEvent"
+import moment from "moment"
 const now = new Date()
+const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 export default {
 	components: {
 		CreateEvent
@@ -80,69 +72,88 @@ export default {
 	data() {
 		return {
 			show_create_event: false,
-			min_date: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
-			old_date: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
-			date: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
+			min_date: today,
+			date: today,
+			eventsDays: {},
 			events: [
-				new Date(new Date().getFullYear(), now.getMonth(), 2),
-				new Date(new Date().getFullYear(), now.getMonth(), 6),
-				{
-					date: new Date(new Date().getFullYear(), now.getMonth(), 6),
-					type: 'is-info'
-				},
-				{
-					date: new Date(new Date().getFullYear(), now.getMonth(), 8),
-					type: 'is-danger'
-				},
-				{
-					date: new Date(new Date().getFullYear(), now.getMonth(), 10),
-					type: 'is-success'
-				},
-				{
-					date: new Date(new Date().getFullYear(), now.getMonth(), 10),
-					type: 'is-link'
-				},
-				new Date(new Date().getFullYear(), now.getMonth(), 12),
-				{
-					date: new Date(new Date().getFullYear(), now.getMonth(), 12),
-					type: 'is-warning'
-				},
-				{
-					date: new Date(new Date().getFullYear(), now.getMonth(), 16),
-					type: 'is-danger'
-				},
-				new Date(new Date().getFullYear(), now.getMonth(), 20),
-				{
-					date: new Date(new Date().getFullYear(), now.getMonth(), 29),
-					type: 'is-success'
-				},
-				{
-					date: new Date(new Date().getFullYear(), now.getMonth(), 29),
-					type: 'is-warning'
-				},
-				{
-					date: new Date(new Date().getFullYear(), now.getMonth(), 29),
-					type: 'is-info'
-				}
-			]
+
+			],
+			today_events: {}
 		}
 	},
 	methods: {
+		parseTime(time) {
+			return time < 10 ? '0' + time : '' + time
+		},
 		isAdmin() {
 			return this.$store.getters.getUserProfile.admin
 		},
 		hasEvent() {
-			return false
+			return (this.today_events.admin || this.today_events.not_admin)
+		},
+		fetchTodayEvents() {
+			var date = moment(this.date)
+			if (this.eventsDays[date.year() + '' + date.month() + '' + date.date()]) {
+				this.$store.dispatch("fetchTodayEvents", moment(this.date)).then(() => {
+					this.today_events = this.$store.getters.getTodayEvents
+				})
+			}
+			else {
+				this.today_events = {}
+			}
 		},
 		calendarClick() {
-			if (this.old_date.toLocaleString() !== this.date.toLocaleString()) {
-				this.old_date = this.date
-				// fetchEvents()
-			}
+			this.fetchTodayEvents()
 		},
 		toggleCreateEvent() {
 			this.show_create_event = !this.show_create_event
+		},
+		deleteEvent() {
+			var date = moment(this.date)
+			this.$store.dispatch("deleteEvent", date).then(() => {
+				this.loadEventsMonth()
+			})
+		},
+		reserved(date) {
+			date = moment(date)
+			this.toggleCreateEvent()
+			this.addCircleEvent(date.year(), date.month(), date.date(), this.$store.getters.getUserProfile.admin)
+			this.fetchTodayEvents()
+		},
+		addCircleEvent(year, month, day, isAdmin) {
+
+			this.events.push({
+				date: new Date(year, month, day),
+				type: isAdmin ? 'is-danger' : "is-primary"
+			})
+			this.eventsDays[year + '' + month + '' + day] = true
+		},
+		loadEventsMonth() {
+			this.events = []
+			this.$store.dispatch("fetchEventsMonth", moment(today)).then(() => {
+				var events = this.$store.getters.getEvents
+				var ids = Object.keys(events)
+				ids.forEach(id => {
+					var days = Object.keys(events[id])
+					days.forEach(day => {
+						var adminArr = events[id][day].admin
+						var not_adminArr = events[id][day].not_admin
+						adminArr.forEach(el => {
+							this.addCircleEvent(el.year, el.month, day, true)
+						})
+						not_adminArr.forEach(el => {
+
+							this.addCircleEvent(el.year, el.month, day, false)
+						})
+
+					})
+				})
+				this.fetchTodayEvents()
+			})
 		}
+	},
+	mounted() {
+		this.loadEventsMonth()
 	}
 }
 </script>
