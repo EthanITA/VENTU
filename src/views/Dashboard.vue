@@ -16,25 +16,25 @@
 		<div class="column has-text-centered">
 			<div v-if="hasEvent()" class="box has-text-left events">
 				<div class="label">Amministratori</div>
-				<div
-					class="has-text-centered"
-					v-if="today_events.admin.length === 0"
-				>Non c'è nessun amministratore</div>
-				<div v-else v-for="partecipant in today_events.admin" :key="partecipant.name" class="columns">
+				<div class="has-text-centered" v-if="data_admin.length === 0">Non c'è nessun amministratore</div>
+
+				<b-table v-else :data="data_admin" :columns="columns"></b-table>
+
+				<!-- 	<div v-else v-for="partecipant in today_events.admin" :key="partecipant.name" class="columns">
 					<div class="column">{{partecipant.name}}</div>
 					<div
 						class="column"
 					>{{parseTime(partecipant.time.hour) + ":" + parseTime(partecipant.time.minute)}}</div>
-				</div>
+				</div>-->
 				<hr />
+
 				<div class="label">Partecipanti</div>
-				<div
-					class="has-text-centered"
-					v-if="today_events.not_admin.length === 0"
-				>Non c'è nessun partecipante</div>
-				<div
+				<div class="has-text-centered" v-if="data_not_admin.length === 0">Non c'è nessun partecipante</div>
+				<b-table v-else :data="data_not_admin" :columns="columns"></b-table>
+				<!--
+					<div
 					v-else
-					class="columns"
+					class="columns is-mobile"
 					v-for="partecipant in today_events.not_admin"
 					:key="partecipant.name"
 				>
@@ -42,7 +42,7 @@
 					<div
 						class="column"
 					>{{parseTime(partecipant.time.hour) + ":" + parseTime(partecipant.time.minute)}}</div>
-				</div>
+				</div>-->
 			</div>
 
 			<div v-else class="box" style="background-color:rgba(255,255,255,0.5)">
@@ -71,14 +71,31 @@ export default {
 	},
 	data() {
 		return {
+			columns: [
+				{
+					field: 'n',
+					label: 'NR.',
+					width: '40',
+					numeric: true
+				},
+				{
+					field: 'name',
+					label: 'Nome',
+				},
+				{
+					field: 'time',
+					label: 'Ora'
+				}
+			],
+			data_admin: [],
+			data_not_admin: [],
 			show_create_event: false,
 			min_date: today,
 			date: today,
 			eventsDays: {},
 			events: [
 
-			],
-			today_events: {}
+			]
 		}
 	},
 	methods: {
@@ -89,18 +106,37 @@ export default {
 			return this.$store.getters.getUserProfile.admin
 		},
 		hasEvent() {
-			return (this.today_events.admin || this.today_events.not_admin)
+			return this.data_admin.length + this.data_not_admin.length > 0
 		},
 		fetchTodayEvents() {
 			var date = moment(this.date)
+			this.data_admin = []
+			this.data_not_admin = []
 			if (this.eventsDays[date.year() + '' + date.month() + '' + date.date()]) {
 				this.$store.dispatch("fetchTodayEvents", moment(this.date)).then(() => {
-					this.today_events = this.$store.getters.getTodayEvents
+					var today_events = this.$store.getters.getTodayEvents
+					var n = 0
+
+					today_events.admin.forEach(admin => {
+						n += 1
+						this.data_admin.push({
+							n: n,
+							name: admin.name,
+							time: this.parseTime(admin.time.hour) + ":" + this.parseTime(admin.time.minute)
+						})
+					})
+					n = 0
+					today_events.not_admin.forEach(not_admin => {
+						n += 1
+						this.data_not_admin.push({
+							n: n,
+							name: not_admin.name,
+							time: this.parseTime(not_admin.time.hour) + ":" + this.parseTime(not_admin.time.minute)
+						})
+					})
 				})
 			}
-			else {
-				this.today_events = {}
-			}
+
 		},
 		calendarClick() {
 			this.fetchTodayEvents()
