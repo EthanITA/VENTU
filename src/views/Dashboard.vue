@@ -20,29 +20,11 @@
 
 				<b-table v-else :data="data_admin" :columns="columns"></b-table>
 
-				<!-- 	<div v-else v-for="partecipant in today_events.admin" :key="partecipant.name" class="columns">
-					<div class="column">{{partecipant.name}}</div>
-					<div
-						class="column"
-					>{{parseTime(partecipant.time.hour) + ":" + parseTime(partecipant.time.minute)}}</div>
-				</div>-->
 				<hr />
 
 				<div class="label">Partecipanti</div>
 				<div class="has-text-centered" v-if="data_not_admin.length === 0">Non c'è nessun partecipante</div>
 				<b-table v-else :data="data_not_admin" :columns="columns"></b-table>
-				<!--
-					<div
-					v-else
-					class="columns is-mobile"
-					v-for="partecipant in today_events.not_admin"
-					:key="partecipant.name"
-				>
-					<div class="column">{{partecipant.name}}</div>
-					<div
-						class="column"
-					>{{parseTime(partecipant.time.hour) + ":" + parseTime(partecipant.time.minute)}}</div>
-				</div>-->
 			</div>
 
 			<div v-else class="box" style="background-color:rgba(255,255,255,0.5)">
