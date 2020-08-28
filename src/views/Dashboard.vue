@@ -104,7 +104,8 @@ export default {
 						this.data_admin.push({
 							n: n,
 							name: admin.name,
-							time: this.parseTime(admin.time.hour) + ":" + this.parseTime(admin.time.minute)
+							time: this.parseTime(admin.time.hour1) + ":" + this.parseTime(admin.time.minute1) +
+								' - ' + this.parseTime(admin.time.hour2) + ":" + this.parseTime(admin.time.minute2)
 						})
 					})
 					n = 0
@@ -113,7 +114,8 @@ export default {
 						this.data_not_admin.push({
 							n: n,
 							name: not_admin.name,
-							time: this.parseTime(not_admin.time.hour) + ":" + this.parseTime(not_admin.time.minute)
+							time: this.parseTime(not_admin.time.hour1) + ":" + this.parseTime(not_admin.time.minute1) +
+								' - ' + this.parseTime(not_admin.time.hour2) + ":" + this.parseTime(not_admin.time.minute2)
 						})
 					})
 				})
