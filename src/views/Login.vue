@@ -79,6 +79,16 @@
 									id="password2"
 								/>
 							</div>
+							<div class="control">
+								<h1>Code</h1>
+								<input
+									class="input"
+									v-model.trim="signupForm.code"
+									type="text"
+									placeholder="Codice per registrarti, chiedi agli altri "
+									id="code"
+								/>
+							</div>
 						</div>
 						<div class="has-text-centered">
 							<b-button @click="signup()" class="button is-link">Sign Up</b-button>
@@ -116,7 +126,8 @@ export default {
 				name: '',
 				admin: false,
 				email: '',
-				password: ''
+				password: '',
+				code: ''
 			},
 			showLoginForm: true,
 			showPasswordReset: false
@@ -133,7 +144,12 @@ export default {
 			this.$store.dispatch('login', this.loginForm)
 		},
 		signup() {
-			this.$store.dispatch('signup', this.signupForm)
+			if (this.signupForm.name.length == 0)
+				alert("Inserisci un nome")
+			else if (this.signupForm.code.toLowerCase() !== 'sono frocio')
+				alert("Codice sbagliato")
+			else
+				this.$store.dispatch('signup', this.signupForm)
 		}
 	}
 }
